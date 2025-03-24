@@ -11,6 +11,7 @@ function resultDescription(operator, resBeforeCalc, calcNum) {
   outputResult(currentResult, description);
 }
 
+
 function writeToLog(operID, initRes, userNum, outRes) {
   const logEntry = {
     operation: operID,
@@ -22,49 +23,55 @@ function writeToLog(operID, initRes, userNum, outRes) {
   console.log(logEntries);
 }
 
+function calculator(calcType) {
+  const enteredNumber = getUserNumInput();
+  const initialResult = currentResult;
+  let mathOperator;
+  if (calcType === "ADD") {
+    currentResult += enteredNumber;
+    mathOperator = '+';
+  } else if (calcType === "SUB") {
+    currentResult -= enteredNumber;
+    mathOperator = '-';
+  } else if (calcType === "MULT") {
+    currentResult *= enteredNumber;
+    mathOperator = '*';
+  } else if (calcType === "DIV") {
+    if (enteredNumber === 0) {
+      alert("pls don't divide by zero");
+    }
+    currentResult /= enteredNumber;
+    mathOperator = '/';
+  } else if (calcType === "MOD") {
+    currentResult %= enteredNumber;
+    mathOperator = '%';
+  } else {
+    alert(`Error, please check the operator ${mathOperator}`);
+  }
+
+  resultDescription(mathOperator, initialResult, enteredNumber);
+  writeToLog(calcType, initialResult, enteredNumber, currentResult);
+}
+
 function add() {
-  const enteredNum = getUserNumInput();
-  const initialRes = currentResult;
-  currentResult += enteredNum;
-  resultDescription("+", initialRes, enteredNum);
-  writeToLog("add", initialRes, enteredNum, currentResult);
+  calculator("ADD");
 }
 
 function multiply() {
-  const enteredNum = getUserNumInput();
-  const initialRes = currentResult;
-  currentResult *= enteredNum;
-  resultDescription("*", initialRes, enteredNum);
-  writeToLog("mult", initialRes, enteredNum, currentResult);
+  calculator("MULT");
+}
+function subtract() {
+  calculator("SUB");
 }
 
 function divide() {
-  const enteredNum = getUserNumInput();
-  const initialRes = currentResult;
-  if (enteredNum == 0) {
-    alert("pls don't divide by zero");
-  } else {
-    currentResult /= enteredNum;
-    resultDescription("/", initialRes, enteredNum);
-    writeToLog("division", initialRes, enteredNum, currentResult);
-  }
+  calculator("DIV");
 }
 
 function modulo() {
-  const enteredNum = getUserNumInput();
-  const initialRes = currentResult;
-  currentResult %= enteredNum;
-  resultDescription("%", initialRes, enteredNum);
-  writeToLog("modulo", initialRes, enteredNum, currentResult);
+  calculator("MOD");
 }
 
-function sqrt() {
-  const enteredNum = getUserNumInput();
-  const initialRes = currentResult;
-  currentResult = initialRes * initialRes;
-  resultDescription("^2", initialRes, enteredNum);
-  writeToLog("sqrt", initialRes, enteredNum, currentResult);
-}
 
 multiplyBtn.addEventListener("click", multiply);
 divideBtn.addEventListener("click", divide);
