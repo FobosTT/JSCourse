@@ -50,14 +50,6 @@ function divide() {
   }
 }
 
-function subtract() {
-  const enteredNum = getUserNumInput();
-  const initialRes = currentResult;
-  currentResult -= enteredNum;
-  resultDescription("-", initialRes, enteredNum);
-  writeToLog("sub", initialRes, enteredNum, currentResult);
-}
-
 function modulo() {
   const enteredNum = getUserNumInput();
   const initialRes = currentResult;
@@ -79,4 +71,3 @@ divideBtn.addEventListener("click", divide);
 subtractBtn.addEventListener("click", subtract);
 addBtn.addEventListener("click", add);
 moduloBtn.addEventListener("click", modulo);
-sqrtBtn.addEventListener("click", modulo);
