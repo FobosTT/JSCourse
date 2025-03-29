@@ -1,3 +1,8 @@
+const LOG_EVENT_PLAYER_ATTACK = 1;
+const LOG_EVENT_PLAYER_STRONG_ATTACK = 2;
+const LOG_EVENT_MONSTER_ATTACK = 3;
+const LOG_EVENT_PLAYER_HEAL = 4;
+const LOG_EVENT_GAME_OVER = 5;
 const ATTACK_VALUE = 10;
 const MONSTER_ATTACK_VALUE = 14;
 const HEAL_VALUE = 20;
@@ -6,6 +11,7 @@ const MODE_STRONG_ATTACK = "STRONG_ATTACK";
 const enteredValue = prompt("Max Life for you and the monster.", "100");
 
 let chosenMaxLife = parseInt(enteredValue);
+let battleLog = [];
 
 if (isNaN(chosenMaxLife) || chosenMaxLife <= 0) {
   chosenMaxLife = 100;
@@ -46,19 +52,33 @@ function stateHandler() {
   if (currentPlayerHealth <= 0 || currentMonsterHealth <= 0) {
     reset();
   }
+  writeToLog(
+    LOG_EVENT_MONSTER_ATTACK,
+    playerDamageTaken,
+    currentMonsterHealth,
+    currentPlayerHealth
+  );
 }
 
 function attackMonster(mode) {
   let maxDamage;
   if (mode === MODE_ATTACK) {
     maxDamage = ATTACK_VALUE;
+    logEvent = LOG_EVENT_PLAYER_ATTACK;
   } else if (mode === MODE_STRONG_ATTACK) {
     maxDamage = ATTACK_VALUE * 2;
+    logEvent = LOG_EVENT_PLAYER_STRONG_ATTACK;
   } else {
     alert("Undefined attack type");
   }
   const damage = dealMonsterDamage(maxDamage);
   currentMonsterHealth -= damage;
+  writeToLog(
+    logEvent,
+    damage,
+    currentMonsterHealth,
+    currentPlayerHealth
+  )
   stateHandler();
 }
 
@@ -72,6 +92,12 @@ function healPlayer() {
   }
   increasePlayerHealth(healing);
   currentPlayerHealth += healing;
+  writeToLog(
+    LOG_EVENT_PLAYER_HEAL,
+    healing,
+    currentMonsterHealth,
+    currentPlayerHealth
+  );
   stateHandler();
 }
 
@@ -84,8 +110,28 @@ function strongAttackHandler() {
   attackMonster('STRONG_ATTACK');
 }
 
+function writeToLog(ev, val, monsterHealth, playerHealth) {
+  let logEntry = {
+    event: ev,
+    value: val,
+    finalMonsterHealth: monsterHealth,
+    finalPlayerHealth: playerHealth
+  };
+
+  if (ev === LOG_EVENT_PLAYER_ATTACK || ev === LOG_EVENT_PLAYER_STRONG_ATTACK) {
+    logEntry.target = "monster";
+  } else if (ev === LOG_EVENT_MONSTER_ATTACK || ev === LOG_EVENT_PLAYER_HEAL) {
+    logEntry.target = "player";
+  }
+  battleLog.push(logEntry);
+}
+
+function printLogHandler() {
+  console.log(battleLog);
+}
+
 
 attackBtn.addEventListener('click', attackHandler);
 strongAttackBtn.addEventListener('click', strongAttackHandler);
 healBtn.addEventListener('click', healPlayer);
-logBtn.addEventListener('click', logGameStatus);
+logBtn.addEventListener('click', printLogHandler);
