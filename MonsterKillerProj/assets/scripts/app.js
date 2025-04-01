@@ -61,16 +61,17 @@ function stateHandler() {
 }
 
 function attackMonster(mode) {
-  let maxDamage;
-  if (mode === MODE_ATTACK) {
-    maxDamage = ATTACK_VALUE;
-    logEvent = LOG_EVENT_PLAYER_ATTACK;
-  } else if (mode === MODE_STRONG_ATTACK) {
-    maxDamage = ATTACK_VALUE * 2;
-    logEvent = LOG_EVENT_PLAYER_STRONG_ATTACK;
-  } else {
-    alert("Undefined attack type");
-  }
+  const maxDamage = mode === MODE_ATTACK ? ATTACK_VALUE : MODE_STRONG_ATTACK;
+  const logEvent = mode === MODE_ATTACK ? ATTACK_VALUE : MODE_STRONG_ATTACK;
+   // if (mode === MODE_ATTACK) {
+  //   maxDamage = ATTACK_VALUE;
+  //   logEvent = LOG_EVENT_PLAYER_ATTACK;
+  // } else if (mode === MODE_STRONG_ATTACK) {
+  //   maxDamage = ATTACK_VALUE * 2;
+  //   logEvent = LOG_EVENT_PLAYER_STRONG_ATTACK;
+  // } else {
+  //   alert("Undefined attack type");
+  // }
   const damage = dealMonsterDamage(maxDamage);
   currentMonsterHealth -= damage;
   writeToLog(
